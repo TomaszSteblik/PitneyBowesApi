@@ -79,9 +79,9 @@ namespace PitneyBowesTests
                 Street = Guid.NewGuid().ToString(),
                 FirstName = Guid.NewGuid().ToString(),
                 LastName = Guid.NewGuid().ToString(),
-                ZipCode = Guid.NewGuid().ToString(),
-                PhoneNumber = Guid.NewGuid().ToString(),
-                BuildingNumber = _random.Next(100),
+                PostalCode = Guid.NewGuid().ToString().Substring(0,5),
+                PhoneNumber = Guid.NewGuid().ToString().Substring(0,9),
+                BuildingNumber = _random.Next(2,100),
                 CreatedAt = DateTime.Now.Subtract(TimeSpan.FromDays(_random.Next(5,20)))
             };
         }

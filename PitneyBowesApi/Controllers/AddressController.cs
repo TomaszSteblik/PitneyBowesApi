@@ -44,10 +44,12 @@ namespace PitneyBowesApi.Controllers
         {
             return Ok();
         }
-
+        
         [HttpPost]
         public async Task<ActionResult<AddressDto>> AddNewAddressAsync()
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
             //return location in header
             return Ok();
         }
