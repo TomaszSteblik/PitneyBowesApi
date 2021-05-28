@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PitneyBowesApi.Data;
 using PitneyBowesApi.DTOs;
@@ -29,11 +31,22 @@ namespace PitneyBowesApi.Controllers
             _mapper = mapper;
         }
         //TODO:LOGGING REQUESTS AND REPONSES
+        
         [HttpGet]
         public async Task<ActionResult<AddressDto>> GetLastAddedAddressAsync()
         {
+            var addresses = await _addressBookRepository.GetAll();
             
-            return Ok();
+            if (!addresses.Any())
+                return NoContent();
+
+            //Version 1: Position based:
+            var address = addresses.Last(); 
+            
+            //Version 2 DateTime based:
+            //var address = await addresses.FirstAsync(add => add.CreatedAt == addresses.Max(ad => ad.CreatedAt));
+
+            return Ok(_mapper.Map<AddressDto>(address));
         }
 
         [HttpGet("{city}")]

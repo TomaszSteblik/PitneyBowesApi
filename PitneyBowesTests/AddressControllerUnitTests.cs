@@ -7,7 +7,9 @@ using Castle.Core.Logging;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using MockQueryable.Moq;
 using Moq;
 using PitneyBowesApi.Controllers;
 using PitneyBowesApi.Data;
@@ -57,10 +59,12 @@ namespace PitneyBowesTests
                 expectedAddresses.Add(GenerateAddress());
             }
             expectedAddresses[^1].CreatedAt = DateTime.Now;
-            var expectedResultValue = expectedAddresses[^1]; 
+            var expectedResultValue = expectedAddresses[^1];
+
+            var mockQueryable = expectedAddresses.AsQueryable();
             
             _addressBookRepositoryStub.Setup(repository => repository.GetAll())
-                .ReturnsAsync(expectedAddresses.AsQueryable());
+                .ReturnsAsync(mockQueryable.BuildMock().Object);
             
             var controller = new AddressController(_addressBookRepositoryStub.Object, _loggerStub.Object,_mapper);
             
