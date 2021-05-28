@@ -11,13 +11,11 @@ namespace PitneyBowesApi.Models
         public string FirstName { get; set; }
         [Required]
         public string LastName { get; set; }
-        [MaxLength(12)]
-        [MinLength(9)]
+        [Phone]
         public string PhoneNumber { get; set; }
         [Required]
         public string City { get; set; }
-        [MinLength(5)]
-        [MaxLength(6)]
+        [StringLength(5)]
         [Required]
         public string PostalCode { get; set; }
         [Required]

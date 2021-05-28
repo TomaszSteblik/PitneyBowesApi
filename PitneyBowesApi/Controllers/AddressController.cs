@@ -28,7 +28,7 @@ namespace PitneyBowesApi.Controllers
             _logger = logger;
             _mapper = mapper;
         }
-        
+        //TODO:LOGGING REQUESTS AND REPONSES
         [HttpGet]
         public async Task<ActionResult<AddressDto>> GetLastAddedAddressAsync()
         {
@@ -54,8 +54,11 @@ namespace PitneyBowesApi.Controllers
         [HttpPost]
         public async Task<ActionResult<AddressDto>> AddNewAddressAsync([FromBody] AddressDto newAddress)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            var address = _mapper.Map<Address>(newAddress);
+            address.Guid = Guid.NewGuid();
+            address.CreatedAt = DateTime.Now;
+            
+            
             //returns created if valid object
             //returns bad request if invalid object
             //return location in header

@@ -31,7 +31,7 @@ namespace PitneyBowesApi
             services.AddControllers();
             services.AddDbContext<MemoryDbContext>(opt => opt.UseInMemoryDatabase("AddressBookDb"));
             services.AddScoped<IAddressBookRepository, MemoryAddressBookRepository>();
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());  
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "PitneyBowesApi", Version = "v1"});

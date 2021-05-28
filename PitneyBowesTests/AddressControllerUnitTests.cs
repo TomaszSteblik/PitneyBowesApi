@@ -137,24 +137,6 @@ namespace PitneyBowesTests
             
         }
 
-        [Fact]
-        public async Task AddNewAddressAsync_WithInvalidAddress_ReturnsBadRequest()
-        {
-            //Arange
-            var newAddressDto = GenerateAddressDto();
-            newAddressDto.PhoneNumber = "1234";
-
-            var controller = new AddressController(_addressBookRepositoryStub.Object, _loggerStub.Object, _mapper);
-            //Act
-
-            var result = await controller.AddNewAddressAsync(newAddressDto);
-            
-            //Assert
-
-            result.Should().BeOfType<BadRequestResult>();
-
-        }
-        
         private Address GenerateAddress()
         {
             return new Address()
