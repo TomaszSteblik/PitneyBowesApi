@@ -49,11 +49,12 @@ namespace PitneyBowesApi.Controllers
         }
         
         [HttpPost]
-        public async Task<ActionResult<AddressDto>> AddNewAddressAsync()
+        public async Task<ActionResult<AddressDto>> AddNewAddressAsync([FromBody] AddressDto newAddress)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            
+            //returns created if valid object
+            //returns bad request if invalid object
             //return location in header
             return Ok();
         }

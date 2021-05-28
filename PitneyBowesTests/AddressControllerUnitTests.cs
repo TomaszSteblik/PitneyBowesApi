@@ -117,6 +117,42 @@ namespace PitneyBowesTests
             result.Result.Should().BeOfType<OkResult>();
             result.Value.Should().AllBeEquivalentTo(_mapper.Map<List<AddressDto>>(expectedAddresses));
         }
+
+        [Fact]
+        public async Task AddNewAddressAsync_WithValidAddress_ReturnsCreatedAddress()
+        {
+            //Arange
+            var newAddressDto = GenerateAddressDto();
+
+            var controller = new AddressController(_addressBookRepositoryStub.Object, _loggerStub.Object, _mapper);
+            //Act
+
+            var result = await controller.AddNewAddressAsync(newAddressDto);
+            
+            //Assert
+
+            result.Should().BeOfType<CreatedResult>();
+            result.Value.Should().BeEquivalentTo(newAddressDto);
+            
+        }
+
+        [Fact]
+        public async Task AddNewAddressAsync_WithInvalidAddress_ReturnsBadRequest()
+        {
+            //Arange
+            var newAddressDto = GenerateAddressDto();
+            newAddressDto.PhoneNumber = "1234";
+
+            var controller = new AddressController(_addressBookRepositoryStub.Object, _loggerStub.Object, _mapper);
+            //Act
+
+            var result = await controller.AddNewAddressAsync(newAddressDto);
+            
+            //Assert
+
+            result.Should().BeOfType<BadRequestResult>();
+
+        }
         
         private Address GenerateAddress()
         {
@@ -131,6 +167,20 @@ namespace PitneyBowesTests
                 PhoneNumber = Guid.NewGuid().ToString().Substring(0,9),
                 BuildingNumber = _random.Next(2,100),
                 CreatedAt = DateTime.Now.Subtract(TimeSpan.FromDays(_random.Next(5,20)))
+            };
+        }
+
+        private AddressDto GenerateAddressDto()
+        {
+            return new AddressDto()
+            {
+                City = Guid.NewGuid().ToString(),
+                Street = Guid.NewGuid().ToString(),
+                FirstName = Guid.NewGuid().ToString(),
+                LastName = Guid.NewGuid().ToString(),
+                PostalCode = Guid.NewGuid().ToString().Substring(0,5),
+                PhoneNumber = Guid.NewGuid().ToString().Substring(0,9),
+                BuildingNumber = _random.Next(2,100),
             };
         }
     }
