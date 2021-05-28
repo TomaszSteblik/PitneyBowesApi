@@ -32,15 +32,17 @@ namespace PitneyBowesTests
         public async Task GetLastAddedAddressAsync_WithNoAddresses_ReturnsNoContent()
         {
             //Arrange
-            _addressBookRepositoryStub.Setup(repository => repository.GetAll()).
-                ReturnsAsync(new List<Address>().AsQueryable());
+            _addressBookRepositoryStub.Setup(repository => repository.GetAll())
+                .ReturnsAsync(new List<Address>().AsQueryable());
             
             var controller = new AddressController(_addressBookRepositoryStub.Object, _loggerStub.Object,_mapper);
             
             //Act
             var response = await controller.GetLastAddedAddressAsync();
+            
             //Assert
             response.Result.Should().BeOfType<NoContentResult>();
+            
         }
 
         [Fact]
@@ -56,8 +58,8 @@ namespace PitneyBowesTests
             expectedAddresses[^1].CreatedAt = DateTime.Now;
             var expectedResultValue = expectedAddresses[^1]; 
             
-            _addressBookRepositoryStub.Setup(repository => repository.GetAll()).
-                ReturnsAsync(expectedAddresses.AsQueryable());
+            _addressBookRepositoryStub.Setup(repository => repository.GetAll())
+                .ReturnsAsync(expectedAddresses.AsQueryable());
             
             var controller = new AddressController(_addressBookRepositoryStub.Object, _loggerStub.Object,_mapper);
             
@@ -70,6 +72,52 @@ namespace PitneyBowesTests
 
         }
 
+        [Fact]
+        public async Task GetAllAddressesFromCityAsync_WithNoAddressesWithGivenCity_ReturnsNoContent()
+        {
+            //Arrange
+            var searchedCity = "Bielsko-Biała";
+            
+            _addressBookRepositoryStub
+                .Setup(repository => repository.Find(x=> x.City==searchedCity))
+                .ReturnsAsync(new List<Address>().AsQueryable);
+            
+            var controller = new AddressController(_addressBookRepositoryStub.Object, _loggerStub.Object, _mapper);
+            
+            //Act
+            var result = await controller.GetAllAddressesFromCityAsync(searchedCity);
+            
+            //Assert
+            result.Result.Should().BeOfType<NoContentResult>();
+        }
+
+        [Fact]
+        public async Task GetAllAddressesFromCityAsync_WithMatchingCity_ReturnsArrayOfAddresses()
+        {
+            //Arrange
+            var searchedCity = "Bielsko-Biała";
+
+            var expectedAddresses = new List<Address>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                expectedAddresses.Add(GenerateAddress());
+                expectedAddresses[i].City = searchedCity;
+            }
+
+            _addressBookRepositoryStub
+                .Setup(repository => repository.Find(x=> x.City==searchedCity))
+                .ReturnsAsync(expectedAddresses.AsQueryable);            
+            
+            var controller = new AddressController(_addressBookRepositoryStub.Object, _loggerStub.Object, _mapper);
+            //Act
+            var result = await controller.GetAllAddressesFromCityAsync(searchedCity);
+
+            //Assert
+            result.Result.Should().BeOfType<OkResult>();
+            result.Value.Should().AllBeEquivalentTo(_mapper.Map<List<AddressDto>>(expectedAddresses));
+        }
+        
         private Address GenerateAddress()
         {
             return new Address()

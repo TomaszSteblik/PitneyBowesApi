@@ -42,6 +42,9 @@ namespace PitneyBowesApi.Controllers
         [HttpGet("{city}")]
         public async  Task<ActionResult<IEnumerable<AddressDto>>> GetAllAddressesFromCityAsync(string city)
         {
+            //returns NoContent if there is no addresses with given city
+            //returns Ok and enumerable of addressDtos
+            
             return Ok();
         }
         
@@ -50,6 +53,7 @@ namespace PitneyBowesApi.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+            
             //return location in header
             return Ok();
         }
