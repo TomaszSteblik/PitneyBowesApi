@@ -32,11 +32,7 @@ namespace PitneyBowesApi.Controllers
         [HttpGet]
         public async Task<ActionResult<AddressDto>> GetLastAddedAddressAsync()
         {
-            //logowanie requesta oraz odpowiedzi
-            //pobiera ostatnio dodany adres
-            //zwraca noContent jesli nie ma adresow
-            //zwraca ok i address z czasem najblizszym teraz
-            var a = await _addressBookRepository.GetAll();
+            
             return Ok();
         }
 
@@ -54,15 +50,18 @@ namespace PitneyBowesApi.Controllers
         [HttpPost]
         public async Task<ActionResult<AddressDto>> AddNewAddressAsync([FromBody] AddressDto newAddress)
         {
+            //model validation returns bad request when model is invalid
+            
             var address = _mapper.Map<Address>(newAddress);
             address.Guid = Guid.NewGuid();
             address.CreatedAt = DateTime.Now;
+
+            await _addressBookRepository.Add(address);
+            await _addressBookRepository.SaveChangesAsyc();
             
+            var uri = new Uri($"https://{HttpContext.Request.Host.Value}/address/{address.City}");
             
-            //returns created if valid object
-            //returns bad request if invalid object
-            //return location in header
-            return Ok();
+            return Created(uri,newAddress);
         }
     }
 }

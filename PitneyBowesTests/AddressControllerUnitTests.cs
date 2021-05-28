@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Castle.Core.Logging;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -64,11 +65,12 @@ namespace PitneyBowesTests
             var controller = new AddressController(_addressBookRepositoryStub.Object, _loggerStub.Object,_mapper);
             
             //Act
-            var result = await controller.GetLastAddedAddressAsync();
+            var actionResult = await controller.GetLastAddedAddressAsync();
             
             //Assert
-            result.Result.Should().BeOfType<OkResult>();
-            result.Value.Should().BeEquivalentTo(_mapper.Map<AddressDto>(expectedResultValue));
+            actionResult.Result.Should().BeOfType<OkObjectResult>();
+            var result = actionResult.Result as OkObjectResult;
+            result?.Value.Should().BeEquivalentTo(_mapper.Map<AddressDto>(expectedResultValue));
 
         }
 
@@ -125,15 +127,26 @@ namespace PitneyBowesTests
             //Arange
             var newAddressDto = GenerateAddressDto();
 
-            var controller = new AddressController(_addressBookRepositoryStub.Object, _loggerStub.Object, _mapper);
+            var controller = new AddressController(_addressBookRepositoryStub.Object, _loggerStub.Object, _mapper)
+            {
+                ControllerContext = new()
+                {
+                    HttpContext = new DefaultHttpContext()
+                    {
+                        Request = { Host = new HostString("fakeUri:5001")}
+                    }
+                }
+            };
+            
             //Act
 
-            var result = await controller.AddNewAddressAsync(newAddressDto);
+            var actionResult = await controller.AddNewAddressAsync(newAddressDto);
             
             //Assert
 
-            result.Should().BeOfType<CreatedResult>();
-            result.Value.Should().BeEquivalentTo(newAddressDto);
+            actionResult.Result.Should().BeOfType<CreatedResult>();
+            var result = actionResult.Result as CreatedResult;
+            result?.Value.Should().BeEquivalentTo(newAddressDto);
             
         }
 
