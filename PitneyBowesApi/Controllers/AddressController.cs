@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -43,10 +44,11 @@ namespace PitneyBowesApi.Controllers
         public async Task<ActionResult<IEnumerable<AddressDto>>> GetAllAddressesFromCityAsync(string city)
         {
             var result = await _addressBookRepository.Find(address => address.City == city);
-            //returns NoContent if there is no addresses with given city
-            //returns Ok and enumerable of addressDtos
+            
             var rAddressDtos = _mapper.Map<IEnumerable<AddressDto>>(result);
-            return Ok(rAddressDtos);
+            if(rAddressDtos.Any())
+                return Ok(rAddressDtos);
+            return NoContent();
         }
         
         [HttpPost]
