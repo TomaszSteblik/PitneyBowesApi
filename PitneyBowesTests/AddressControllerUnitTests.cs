@@ -111,11 +111,12 @@ namespace PitneyBowesTests
             
             var controller = new AddressController(_addressBookRepositoryStub.Object, _loggerStub.Object, _mapper);
             //Act
-            var result = await controller.GetAllAddressesFromCityAsync(searchedCity);
+            var actionResult = await controller.GetAllAddressesFromCityAsync(searchedCity);
 
             //Assert
-            result.Result.Should().BeOfType<OkResult>();
-            result.Value.Should().AllBeEquivalentTo(_mapper.Map<List<AddressDto>>(expectedAddresses));
+            actionResult.Result.Should().BeOfType<OkObjectResult>();
+            var result = actionResult.Result as OkObjectResult;
+            result?.Value.Should().BeEquivalentTo(_mapper.Map<List<AddressDto>>(expectedAddresses));
         }
 
         [Fact]
