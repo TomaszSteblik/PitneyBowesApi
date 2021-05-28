@@ -1,0 +1,7 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=eea2c6a5_002D1171_002D4913_002D9cc9_002D46077d3c6472/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="GetLastAddedAddressAsync_WithExisitingAddresses_ReturnsNewestAddress" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;xUnit::308E2CAB-42A7-476B-ABDE-671FDB17A54F::net5.0::PitneyBowesTests.AddressControllerUnitTests.GetLastAddedAddressAsync_WithExisitingAddresses_ReturnsNewestAddress&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::308E2CAB-42A7-476B-ABDE-671FDB17A54F::net5.0::PitneyBowesTests.AddressControllerUnitTests.GetLastAddedAddressAsync_WithNoAddresses_ReturnsNoContent&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
