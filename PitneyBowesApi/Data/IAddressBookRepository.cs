@@ -11,7 +11,6 @@ namespace PitneyBowesApi.Data
     {
         Task<int> SaveChangesAsyc();
         Task<Address> GetById(Guid guid);
-        //using IQueryable to make transition to entity framework easier if needed
         Task<IQueryable<Address>> GetAll();
         Task<IQueryable<Address>> Find(Expression<Func<Address, bool>> expression);
         Task Add(Address entity);

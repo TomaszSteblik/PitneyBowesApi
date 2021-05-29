@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using PitneyBowesApi.Data;
+using PitneyBowesApi.Middleware;
 
 namespace PitneyBowesApi
 {
@@ -29,9 +30,13 @@ namespace PitneyBowesApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            
             services.AddDbContext<MemoryDbContext>(opt => opt.UseInMemoryDatabase("AddressBookDb"));
+            
             services.AddScoped<IAddressBookRepository, MemoryAddressBookRepository>();
+            
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "PitneyBowesApi", Version = "v1"});
@@ -47,12 +52,10 @@ namespace PitneyBowesApi
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "PitneyBowesApi v1"));
             }
-
-            app.UseHttpsRedirection();
-
+            
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseMiddleware<LoggingMiddleware>();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }

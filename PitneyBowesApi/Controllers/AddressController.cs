@@ -1,10 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PitneyBowesApi.Data;
@@ -19,22 +23,19 @@ namespace PitneyBowesApi.Controllers
     {
 
         private readonly IAddressBookRepository _addressBookRepository;
-        private readonly ILogger _logger;
         private readonly IMapper _mapper;
         
         
-        public AddressController(IAddressBookRepository addressBookRepository, ILogger<AddressController> logger,
-            IMapper mapper)
+        public AddressController(IAddressBookRepository addressBookRepository, IMapper mapper)
         {
             _addressBookRepository = addressBookRepository;
-            _logger = logger;
             _mapper = mapper;
         }
-        //TODO:LOGGING REQUESTS AND REPONSES
         
         [HttpGet]
         public async Task<ActionResult<AddressDto>> GetLastAddedAddressAsync()
         {
+            
             var addresses = await _addressBookRepository.GetAll();
             
             if (!addresses.Any())
@@ -52,6 +53,7 @@ namespace PitneyBowesApi.Controllers
         [HttpGet("{city}")]
         public async Task<ActionResult<IEnumerable<AddressDto>>> GetAllAddressesFromCityAsync(string city)
         {
+
             var result = await _addressBookRepository.Find(address => address.City == city);
             
             var rAddressDtos = _mapper.Map<IEnumerable<AddressDto>>(result);
@@ -63,6 +65,8 @@ namespace PitneyBowesApi.Controllers
         [HttpPost]
         public async Task<ActionResult<AddressDto>> AddNewAddressAsync([FromBody] AddressDto newAddress)
         {
+            var bodyReader = await Request.BodyReader.ReadAsync();
+
             //model validation returns bad request when model is invalid
             
             var address = _mapper.Map<Address>(newAddress);
