@@ -38,7 +38,7 @@ namespace PitneyBowesTests
             _addressBookRepositoryStub.Setup(repository => repository.GetAll())
                 .ReturnsAsync(new List<Address>().AsQueryable());
             
-            var controller = new AddressController(_addressBookRepositoryStub.Object, _loggerStub.Object,_mapper);
+            var controller = new AddressController(_addressBookRepositoryStub.Object,_mapper);
             
             //Act
             var response = await controller.GetLastAddedAddressAsync();
@@ -66,7 +66,7 @@ namespace PitneyBowesTests
             _addressBookRepositoryStub.Setup(repository => repository.GetAll())
                 .ReturnsAsync(mockQueryable.BuildMock().Object);
             
-            var controller = new AddressController(_addressBookRepositoryStub.Object, _loggerStub.Object,_mapper);
+            var controller = new AddressController(_addressBookRepositoryStub.Object, _mapper);
             
             //Act
             var actionResult = await controller.GetLastAddedAddressAsync();
@@ -88,7 +88,7 @@ namespace PitneyBowesTests
                 .Setup(repository => repository.Find(x=> x.City==searchedCity))
                 .ReturnsAsync(new List<Address>().AsQueryable);
             
-            var controller = new AddressController(_addressBookRepositoryStub.Object, _loggerStub.Object, _mapper);
+            var controller = new AddressController(_addressBookRepositoryStub.Object, _mapper);
             
             //Act
             var result = await controller.GetAllAddressesFromCityAsync(searchedCity);
@@ -115,7 +115,7 @@ namespace PitneyBowesTests
                 .Setup(repository => repository.Find(x=> x.City==searchedCity))
                 .ReturnsAsync(expectedAddresses.AsQueryable);            
             
-            var controller = new AddressController(_addressBookRepositoryStub.Object, _loggerStub.Object, _mapper);
+            var controller = new AddressController(_addressBookRepositoryStub.Object, _mapper);
             //Act
             var actionResult = await controller.GetAllAddressesFromCityAsync(searchedCity);
 
@@ -131,7 +131,7 @@ namespace PitneyBowesTests
             //Arange
             var newAddressDto = GenerateAddressDto();
 
-            var controller = new AddressController(_addressBookRepositoryStub.Object, _loggerStub.Object, _mapper)
+            var controller = new AddressController(_addressBookRepositoryStub.Object, _mapper)
             {
                 ControllerContext = new()
                 {
