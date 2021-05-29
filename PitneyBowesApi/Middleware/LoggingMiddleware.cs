@@ -71,7 +71,7 @@ namespace PitneyBowesApi.Middleware
                 headers += $"{header.Key}: {header.Value}\n";
             }
             
-            return $"\nHeaders:\n{headers}Body:\n{body}\n";
+            return $"\nHeaders:\nStatus code: {response.StatusCode}\n{headers}Body:\n{body}\n";
         }
 
        
